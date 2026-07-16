@@ -83,11 +83,11 @@ npx wxt zip --browser edge    # .output/veil-0.1.0-edge.zip
 
 Veil is configured through its in-UI settings, not files:
 
-| Setting | Default | Description |
-|---|---|---|
-| Auto-lock | 5 minutes | Re-encrypt the vault after this idle period. |
-| Unlock rate-limit | 5 attempts / 60 s | Cooldown after repeated wrong passwords. |
-| Save shortcut | `Ctrl+Shift+S` | Saves the current page. |
+| Setting           | Default           | Description                                  |
+| ----------------- | ----------------- | -------------------------------------------- |
+| Auto-lock         | 5 minutes         | Re-encrypt the vault after this idle period. |
+| Unlock rate-limit | 5 attempts / 60 s | Cooldown after repeated wrong passwords.     |
+| Save shortcut     | `Ctrl+Shift+S`    | Saves the current page.                      |
 
 > [!NOTE]
 > The save shortcut is managed by the browser; rebind it in `edge://extensions/shortcuts`, not
