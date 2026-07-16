@@ -91,7 +91,11 @@ export default tseslint.config(
   },
   {
     files: ['**/*.{ts,tsx}'],
-    ...reactHooks.configs['recommended-latest'],
+    plugins: {'react-hooks': reactHooks},
+    rules: {
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
+    },
   },
   prettier,
   {

@@ -6,7 +6,7 @@
 # Veil
 
 [![Project Status: Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178c6)](https://www.typescriptlang.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178c6)](https://www.typescriptlang.org/)
 [![Build](https://img.shields.io/badge/WXT-0.20-34d399)](https://wxt.dev/)
 [![GitHub release](https://img.shields.io/github/v/release/Jonah-Fan/veil?logo=github)](https://github.com/Jonah-Fan/veil/releases)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
