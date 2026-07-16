@@ -1,0 +1,5 @@
+dist/
+.output/
+.wxt/
+*.lock
+package-lock.json

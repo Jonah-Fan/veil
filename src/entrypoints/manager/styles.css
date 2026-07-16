@@ -1,0 +1,768 @@
+/* Veil manager surface styles — surface-specific only: full-page body
+   geometry and the manager main UI (header / search / tag chips / list rows
+   / empty state). The auth styles shared with the popup (tokens / form
+   controls / buttons / init+lock emblems / keyframes / top aurora band) live
+   in `src/styles/auth.css`, loaded by `main.tsx` before this file; this file
+   only overrides the init/lock aurora geometry to center vertically (auth
+   defaults to a top-aligned horizontal band). */
+
+/* The manager is a full-page surface (not a 360px popup): body is unconstrained. */
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui,
+    -apple-system,
+    'Segoe UI',
+    sans-serif;
+    font-size: 14px;
+}
+
+/* ── Aurora / surface geometry ────────────────────────── */
+/* Two manager geometries: the auth gate (init/lock) = a centered full-page
+   card with a vertically centered aurora; the main UI (manager) = a true
+   full-width content area (fills the viewport with small clamped side
+   margins) plus a top aurora band. The aurora's gradient / blur / opacity /
+   animation are shared across all four surfaces (see the Aurora section of
+   auth.css); here we only override the init/lock geometry to center vertically
+   (auth defaults to top -32px / height 220px, horizontally spread). The
+   manager keeps the default, so it has no ::before rule. The aurora overflows
+   with left/right:-48px and is clipped to the surface by overflow:hidden, so
+   the main UI's aurora spans the full page width at the top. */
+.view--init,
+.view--lock {
+    position: relative;
+    overflow: hidden;
+    max-width: 380px;
+    margin: 0 auto;
+    min-height: 100vh;
+    justify-content: center;
+}
+
+.view--manager {
+    position: relative;
+    overflow: hidden;
+    min-height: 100vh;
+    padding: 32px clamp(16px, 5vw, 64px) 48px;
+}
+
+/* init/lock centered card: the aurora is recentered vertically; only the
+   geometry is overridden (gradient / blur / opacity / animation reuse the
+   shared auth.css rules). */
+.view--init::before,
+.view--lock::before {
+    top: calc(50% - 130px);
+    height: 260px;
+}
+
+.view--manager .manager__header {
+    animation: hero-rise 0.5s ease 0.08s both;
+}
+
+/* ── ManagerView ──────────────────────────────────────── */
+
+.manager__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    text-align: center;
+    margin-bottom: 4px;
+}
+
+.manager__eyebrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.manager__eyebrow::before,
+.manager__eyebrow::after {
+    content: '';
+    width: 26px;
+    height: 1px;
+    background: var(--border);
+}
+
+.view--manager .view__title {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+/* meta row: count / auto-lock on the left, lock button on the right. */
+.manager__meta-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.manager__meta {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+.manager__lock {
+    padding: 5px 12px;
+    font-size: 13px;
+}
+
+/* ── Layout + folder sidebar ───────────────────────────── */
+/* The header sits full-width at the top (a direct child; its animation /
+   centering are unchanged); below it are two columns: the folder sidebar on
+   the left and the main area (search / tags / list) on the right. Narrow
+   screens stack to avoid horizontal overflow. */
+.manager__layout {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.manager__sidebar {
+    width: 200px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.manager__main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Sidebar title: eyebrow typography + a trailing hairline (reuses the unlocked__section language). */
+.manager__sidebar-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 2px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.manager__sidebar-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+}
+
+/* Folder row list. */
+.folder__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+/* Folder row: reuses the mrow / recent__item hover language — a left accent
+   bar + raised row background; the right-end action buttons are hidden by
+   default and revealed on hover. Structure is li > div(folder) > span(accent)
+   + button(.folder__main) + button(.folder__action), avoiding a button inside
+   a button. */
+.folder {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 8px 6px 12px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    background: none;
+    overflow: hidden;
+    transition: background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.folder:hover,
+.folder:focus-within {
+    background: var(--bg-elevated);
+}
+
+.folder--active,
+.folder--active:hover,
+.folder--active:focus-within {
+    background: var(--accent-glow);
+    border-color: var(--accent);
+}
+
+.folder__accent {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--accent);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.2s ease;
+}
+
+.folder--active .folder__accent,
+.folder:hover .folder__accent,
+.folder:focus-within .folder__accent {
+    transform: scaleY(1);
+}
+
+.folder__main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0;
+    border: none;
+    background: none;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    font: inherit;
+}
+
+.folder__name {
+    flex: 1;
+    min-width: 0;
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.folder__count {
+    flex-shrink: 0;
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.folder__actions {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+    width: 52px;
+    justify-content: flex-end;
+}
+
+.folder__action {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    background: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s ease,
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+.folder:hover .folder__action,
+.folder:focus-within .folder__action {
+    opacity: 1;
+}
+
+.folder__action--danger:hover {
+    color: var(--danger);
+    background: var(--danger-glow);
+}
+
+.folder__action--edit:hover {
+    color: var(--accent);
+    background: var(--accent-glow);
+}
+
+.folder__action svg {
+    width: 14px;
+    height: 14px;
+    display: block;
+}
+
+/* Inline rename: the whole row swaps to a single input (reuses .field__input). */
+.folder__rename form {
+    margin: 0;
+}
+
+.folder__rename .field__input {
+    padding: 5px 8px;
+    font-size: 13px;
+}
+
+/* New folder: a ghost button / inline input toggle. */
+.manager__new-folder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    padding: 6px 10px;
+    font-size: 13px;
+}
+
+.manager__new-folder svg {
+    width: 14px;
+    height: 14px;
+}
+
+.manager__new-folder-input {
+    margin: 0;
+}
+
+.manager__new-folder-input .field__input {
+    padding: 6px 10px;
+    font-size: 13px;
+}
+
+/* ── Search box ───────────────────────────────────────── */
+.manager__search {
+    position: relative;
+}
+
+.manager__search-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+.manager__search-input {
+    padding-left: 34px;
+}
+
+/* ── Tag chip row ─────────────────────────────────────── */
+.manager__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.manager__tag {
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--field-bg);
+    color: var(--text-muted);
+    font-size: 12px;
+    cursor: pointer;
+    transition: color 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.manager__tag:hover {
+    color: var(--text);
+}
+
+.manager__tag--active {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--accent-glow);
+}
+
+/* ── List ──────────────────────────────────────────────── */
+.manager__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* List row: reuses the popup recent__item hover language — a rising left
+   accent bar + raised row background; the right-end delete button is hidden
+   by default and revealed on hover. favicon / main / time are laid out
+   horizontally within the row. */
+.mrow {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 12px 10px 14px;
+    border-radius: 8px;
+    background: var(--field-bg);
+    border: 1px solid var(--border);
+    box-shadow: inset 0 1px 0 var(--field-hi);
+    overflow: hidden;
+    transition: background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.mrow__accent {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--accent);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.2s ease;
+}
+
+.mrow:hover,
+.mrow:focus-within {
+    background: var(--bg-elevated);
+    border-color: var(--accent);
+}
+
+.mrow:hover .mrow__accent,
+.mrow:focus-within .mrow__accent {
+    transform: scaleY(1);
+}
+
+.mrow__favicon {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: none;
+    border-radius: 6px;
+    background: var(--accent-glow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.mrow__favicon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 3px;
+}
+
+.mrow__initial {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.mrow__main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 0;
+    border: none;
+    background: none;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    font: inherit;
+}
+
+.mrow__title {
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mrow__domain {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.mrow__desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.mrow__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 4px;
+}
+
+.mrow__tag {
+    padding: 1px 7px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text-muted);
+    font-size: 11px;
+}
+
+.mrow__time {
+    flex-shrink: 0;
+    font-size: 11px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    padding-top: 3px;
+}
+
+.mrow__action {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    background: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s ease,
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+.mrow:hover .mrow__action,
+.mrow:focus-within .mrow__action {
+    opacity: 1;
+}
+
+.mrow__action--danger:hover {
+    color: var(--danger);
+    background: var(--danger-glow);
+}
+
+.mrow__action--edit:hover {
+    color: var(--accent);
+    background: var(--accent-glow);
+}
+
+.mrow__action svg {
+    width: 16px;
+    height: 16px;
+    display: block;
+}
+
+/* ── Inline edit form ─────────────────────────────────── */
+.mrow--editing {
+    display: block;
+    padding: 12px 14px;
+}
+
+.mrow__edit {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Read-only URL row: the URL is not editable (it's the identity / dedup
+   key); it's display-only and opens in a new tab on click. It looks like
+   .field__input but with a gray background + pointer cursor to visually
+   separate it from editable inputs. */
+.mrow__url {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 8px 10px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    box-shadow: inset 0 1px 0 var(--field-hi);
+    color: var(--text-muted);
+    font-size: 13px;
+    text-align: left;
+    cursor: pointer;
+    transition: color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.mrow__url:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+.mrow__url-icon {
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+    color: inherit;
+}
+
+.mrow__url-text {
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    direction: rtl;
+    text-align: left;
+}
+
+.mrow__edit-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+}
+
+.mrow__edit-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 4px 2px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 12px;
+}
+
+.mrow__edit-tag button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    padding: 0;
+    border: none;
+    border-radius: 999px;
+    background: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+}
+
+.mrow__edit-tag button:hover {
+    color: var(--danger);
+    background: var(--danger-glow);
+}
+
+.mrow__edit-tag-input {
+    flex: 1;
+    min-width: 80px;
+    padding: 2px 6px;
+    border: none;
+    background: none;
+    color: var(--text);
+    font-size: 12px;
+    outline: none;
+}
+
+.mrow__edit-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+/* ── Empty state / preview hint ───────────────────────── */
+.manager__empty {
+    margin: 0;
+    padding: 32px 0;
+    color: var(--text-muted);
+    font-size: 13px;
+    line-height: 1.6;
+    text-align: center;
+}
+
+.manager__notice {
+    margin: 24px 0 0;
+    text-align: center;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+    opacity: 0.7;
+}
+
+/* Narrow screens: the sidebar stacks above the main area to avoid horizontal overflow. */
+@media (max-width: 720px) {
+    .manager__layout {
+        flex-direction: column;
+    }
+
+    .manager__sidebar {
+        width: 100%;
+    }
+}
+
+/* ── Drag visuals (dnd-kit) ────────────────────────────── */
+/* Bookmark row wrapper: dnd-kit applies transform/transition inline here for
+   smooth movement; we only add the dragging / overlay states. .mrow-wrap is
+   unstyled by default — it's just the sortable mount point. */
+.mrow-wrap--dragging {
+    opacity: 0.4;
+}
+
+/* DragOverlay clone: lifts out of the list, floats with the cursor, and gets a raised shadow + accent border to signal "being dragged". */
+.mrow-wrap--overlay {
+    cursor: grabbing;
+}
+
+.mrow-wrap--overlay .mrow {
+    border-color: var(--accent);
+    box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 var(--field-hi);
+}
+
+/* When a bookmark is dragged over a folder, the target folder row highlights (accent border + slightly stronger background). */
+.folder--over,
+.folder--over:hover,
+.folder--over:focus-within {
+    border-color: var(--accent);
+    background: var(--accent-glow);
+}
+
+/* Folder while dragging: lowered opacity, same as a dragging bookmark. */
+.folder--dragging {
+    opacity: 0.4;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .view--manager .manager__header {
+        animation: none;
+    }
+
+    .mrow,
+    .mrow__accent,
+    .mrow__action,
+    .manager__tag,
+    .folder,
+    .folder__accent,
+    .folder__action,
+    .manager__new-folder {
+        transition: none;
+    }
+
+    /* Override dnd-kit's inline transform transition so reordering snaps instantly under reduced-motion. */
+    .mrow-wrap,
+    .folder {
+        transition: none !important;
+    }
+}

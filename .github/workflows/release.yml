@@ -1,0 +1,48 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and publish GitHub Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v5
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build extension (chrome)
+        run: npm run build
+
+      - name: Build extension (edge)
+        run: npx wxt build --browser edge
+
+      - name: Package distribution zip (chrome)
+        run: npm run zip
+
+      - name: Package distribution zip (edge)
+        run: npx wxt zip --browser edge
+
+      - name: Create GitHub Release and upload assets
+        uses: softprops/action-gh-release@v3.0.1
+        with:
+          generate_release_notes: true
+          files: |
+            .output/veil-*-chrome.zip
+            .output/veil-*-edge.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

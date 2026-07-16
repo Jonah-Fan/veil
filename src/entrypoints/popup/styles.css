@@ -1,0 +1,334 @@
+/* Veil popup surface styles — surface-specific only: 360px body geometry,
+   the popup-only current-page card + recent list (with swipe-to-delete),
+   UnlockedView, and the popup-only reduced-motion additions. The auth styles
+   shared with the manager (tokens / form controls / buttons / init+lock
+   emblems / keyframes / top aurora band) live in `src/styles/auth.css`, loaded
+   by `main.tsx` before this file; the popup's init/lock/unlocked all use the
+   default top-aligned horizontal aurora, so no override is needed. */
+
+body {
+    width: 360px;
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui,
+    -apple-system,
+    'Segoe UI',
+    sans-serif;
+    font-size: 14px;
+}
+
+.current-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px 10px 14px;
+    background: var(--field-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: inset 0 1px 0 var(--field-hi);
+    overflow: hidden;
+}
+
+.current-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--accent);
+}
+
+.current-card__favicon {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    border-radius: 6px;
+    padding: 3px;
+    background: var(--accent-glow);
+    object-fit: contain;
+}
+
+.current-card__meta {
+    min-width: 0;
+}
+
+.current-card__title {
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.current-card__url {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.divider {
+    height: 1px;
+    background: var(--border);
+    margin: 4px 0;
+}
+
+.recent {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.recent__item {
+    position: relative;
+    padding: 8px 10px 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: background 0.2s ease;
+}
+
+.recent__item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 3px;
+    height: 16px;
+    background: var(--accent);
+    border-radius: 0 2px 2px 0;
+    transform: translateY(-50%) scaleY(0);
+    transition: transform 0.2s ease;
+}
+
+.recent__item:hover,
+.recent__item:focus-within {
+    background: var(--bg-elevated);
+}
+
+.recent__item:hover::before,
+.recent__item:focus-within::before {
+    transform: translateY(-50%) scaleY(1);
+}
+
+/* Swipe-left reveal: on hover/focus the content slides left and a
+   delete button is uncovered on the right. The button is opacity:0
+   and non-interactive until revealed, so it never blocks row clicks.
+   The favicon is the flex row leader inside .recent__main, so it slides left
+   with main; the delete button is uncovered from the right. */
+.recent__main {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    transition: transform 0.2s ease;
+}
+
+.recent__item:hover .recent__main,
+.recent__item:focus-within .recent__main {
+    transform: translateX(-44px);
+}
+
+.recent__favicon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 5px;
+    background: var(--accent-glow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.recent__favicon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 2px;
+}
+
+.recent__initial {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.recent__text {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.recent__delete {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    background: var(--danger);
+    color: #fff;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease,
+    filter 0.2s ease;
+}
+
+.recent__item:hover .recent__delete,
+.recent__item:focus-within .recent__delete {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.recent__delete:hover {
+    filter: brightness(1.08);
+}
+
+.recent__delete svg {
+    width: 16px;
+    height: 16px;
+    display: block;
+}
+
+.recent__title {
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.recent__domain {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.recent__empty,
+.unlocked__empty {
+    margin: 0;
+    padding: 16px 0;
+    color: var(--text-muted);
+    font-size: 13px;
+    text-align: center;
+}
+
+/* ── Aurora container clip ─────────────────────────────── */
+/* The aurora band (gradient / blur / animation) is shared across all four
+   surfaces — see the Aurora section of auth.css. The popup's
+   init/lock/unlocked all use the default top-aligned horizontal spread, so no
+   override is needed. Here we only keep the container position/overflow:hidden
+   — it clips the aurora's left/right:-48px overflow so it spans the full page
+   width at the top without bleeding out. */
+.view--init,
+.view--lock,
+.view--unlocked {
+    position: relative;
+    overflow: hidden;
+}
+
+.view--unlocked .unlocked__header {
+    animation: hero-rise 0.5s ease 0.08s both;
+}
+
+.view--unlocked .current-card {
+    animation: hero-rise 0.5s ease 0.16s both;
+}
+
+/* ── UnlockedView ─────────────────────────────────────── */
+.view--unlocked {
+    padding-top: 20px;
+}
+
+.unlocked__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    text-align: center;
+}
+
+.unlocked__eyebrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.unlocked__eyebrow::before,
+.unlocked__eyebrow::after {
+    content: '';
+    width: 26px;
+    height: 1px;
+    background: var(--border);
+}
+
+.view--unlocked .view__title {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.view--unlocked .view__subtitle {
+    margin: 0;
+    max-width: 260px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.unlocked__form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.unlocked__section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.unlocked__section::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .recent__item,
+    .recent__item::before,
+    .recent__main,
+    .recent__delete {
+        transition: none;
+    }
+
+    .recent__item:hover {
+        transform: none;
+    }
+
+    .view--unlocked .unlocked__header,
+    .view--unlocked .current-card {
+        animation: none;
+    }
+}

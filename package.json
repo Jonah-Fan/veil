@@ -1,0 +1,65 @@
+{
+  "name": "veil",
+  "version": "0.1.0",
+  "description": "Encrypted bookmark manager",
+  "license": "MIT",
+  "author": "Jonah Fan <jonah-fan@outlook.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Jonah-Fan/veil.git"
+  },
+  "homepage": "https://github.com/Jonah-Fan/veil",
+  "bugs": {
+    "url": "https://github.com/Jonah-Fan/veil/issues"
+  },
+  "keywords": [
+    "browser-extension",
+    "edge",
+    "chrome",
+    "mv3",
+    "wxt",
+    "react",
+    "typescript",
+    "encryption",
+    "bookmarks",
+    "privacy"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wxt",
+    "build": "wxt build",
+    "zip": "wxt zip",
+    "postinstall": "wxt prepare",
+    "lint": "eslint . && tsc --noEmit",
+    "format": "prettier --write \"src/**/*.{ts,tsx,css}\" && eslint . --fix"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.4",
+    "@resvg/resvg-js": "^2.6.2",
+    "@types/node": "^26.1.1",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.3",
+    "eslint": "^9.39.4",
+    "eslint-config-prettier": "^9.1.2",
+    "eslint-plugin-jsdoc": "^63.0.13",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "globals": "^17.7.0",
+    "prettier": "^3.3.0",
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.63.0",
+    "wxt": "^0.20.27"
+  },
+  "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
+  }
+}

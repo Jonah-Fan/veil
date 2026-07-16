@@ -1,0 +1,72 @@
+name: Bug report
+description: Report a problem with Veil
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug. If you suspect a security vulnerability, please
+        **do not** use this form — follow the private reporting process in
+        [SECURITY.md](https://github.com/Jonah-Fan/veil/blob/master/SECURITY.md) instead.
+
+  - type: input
+    id: version
+    attributes:
+      label: Veil version
+      placeholder: "0.1.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser
+      options:
+        - Chrome
+        - Edge
+        - Firefox
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: browser-version
+    attributes:
+      label: Browser version
+      placeholder: "Chrome 126.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: install
+    attributes:
+      label: How did you install Veil?
+      options:
+        - Loaded unpacked from `.output/` (dev build)
+        - Built from source
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A description of the problem and its impact. What did you expect, and what did you see?
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Console / error output
+      description: Relevant messages from the browser DevTools console (or the extension's service-worker logs). Paste them inside triple backticks.
+      render: shell
+
+  - type: textarea
+    id: reproducer
+    attributes:
+      label: Steps to reproduce
+      description: The smallest set of steps that triggers the problem.
+    validations:
+      required: true

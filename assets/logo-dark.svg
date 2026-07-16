@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Veil">
+  <title>Veil</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#22272b"/>
+      <stop offset="1" stop-color="#161a1d"/>
+    </linearGradient>
+    <linearGradient id="mark" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#d8cff4"/>
+      <stop offset="1" stop-color="#c4b6ec"/>
+    </linearGradient>
+    <linearGradient id="veil" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#a99ce6"/>
+      <stop offset="1" stop-color="#7c6acc"/>
+    </linearGradient>
+  </defs>
+  <!-- theme-color ground -->
+  <rect width="128" height="128" rx="26" fill="url(#bg)"/>
+  <!-- the veiled object: a bookmark TAG (flat top, concave V-notch up into the bottom). Centered
+       vertically in the 128 canvas (spans ~18–104, centered on 64). -->
+  <path d="M42 18 L86 18 L86 104 L70 104 L64 86 L58 104 L42 104 Z" fill="url(#mark)"/>
+  <!-- the veil: a sheer curtain HUNG from a straight top edge (the rod line) and blowing at
+       the free hem. Straight hung top + rippling free hem = fabric. The hem flutters into four
+       large waves blown toward the lower-left (wind from the right); the bookmark shows through. -->
+  <path d="M30 28
+           L98 26
+           C101 46 95 60 99 72
+           C96 79 98 81 96 82
+           Q86 100 78 80
+           Q68 101 60 80
+           Q50 101 42 80
+           Q33 99 30 86
+           L30 28 Z"
+        fill="url(#veil)" opacity="0.62"/>
+  <!-- the rod the veil hangs from -->
+  <line x1="28" y1="26" x2="100" y2="24" stroke="#a99ce6" stroke-width="2.5" stroke-linecap="round" opacity="0.85"/>
+  <!-- gauze sheen: a sliver of light catching the cloth -->
+  <path d="M40 32 L58 32 L52 76 L34 76 Z" fill="#ffffff" opacity="0.09"/>
+</svg>
