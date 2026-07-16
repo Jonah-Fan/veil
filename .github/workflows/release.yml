@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Set up Node 20
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v7
         with:
           node-version: '20'
           cache: npm
@@ -38,7 +38,7 @@ jobs:
         run: npx wxt zip --browser edge
 
       - name: Create GitHub Release and upload assets
-        uses: softprops/action-gh-release@v3.0.1
+        uses: softprops/action-gh-release@v3.0.2
         with:
           generate_release_notes: true
           files: |
